@@ -80,12 +80,6 @@
             <version>${wildfly.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>org.wildfly</groupId>
-            <artifactId>wildfly-embedded</artifactId>
-            <version>${wildfly.version}</version>
-            <scope>test</scope>
-        </dependency>-->
         <!-- Arquillian Spring -->
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
