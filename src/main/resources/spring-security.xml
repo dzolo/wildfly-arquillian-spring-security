@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Spring security configuration with simple basic HTTP auth
+    and dynamic user details provider.
+-->
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                                 http://www.springframework.org/schema/security
+                                 http://www.springframework.org/schema/security/spring-security-3.2.xsd
+                                 http://www.springframework.org/schema/context
+                                 http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <!-- Define what must not be checked -->
+    <http pattern="/public.jsp" security="none"></http>
+
+    <!-- Define what must be checked and how -->
+    <http auto-config="true" realm="WILDFLY TEST">
+        <http-basic/>
+        <!-- allow all for logged (ADMIN only role) -->
+        <intercept-url pattern="/**" access="ROLE_ADMIN" />
+    </http>
+
+    <!-- Authentication provider. -->
+    <beans:bean id="authenticationProvider"
+          class="com.kopaid.example.wildfly.spring.security.UserDetailsServiceImpl"/>
+
+    <!-- Password encoder provider. -->
+    <beans:bean id="passwordEncoder"
+                class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+        <beans:constructor-arg value="256"/>
+    </beans:bean>
+
+    <!-- Authentication manager with setup provider and encoder. -->
+    <authentication-manager>
+        <authentication-provider user-service-ref="authenticationProvider">
+            <password-encoder ref="passwordEncoder">
+                <salt-source user-property="username" />
+            </password-encoder>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>
